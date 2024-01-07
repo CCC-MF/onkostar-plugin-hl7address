@@ -35,13 +35,17 @@ public class Address {
     private String postalCode;
     private String country;
 
-    public Address(String streetAddress, String otherDesignation, String city, String state, String postalCode, String country) {
-        this.streetAddress = streetAddress;
-        this.otherDesignation = otherDesignation;
-        this.city = city;
-        this.state = state;
-        this.postalCode = postalCode;
-        this.country = country;
+    protected Address() {
+        this.streetAddress = "";
+        this.otherDesignation = "";
+        this.city = "";
+        this.state = "";
+        this.postalCode = "";
+        this.country = "";
+    }
+
+    public static Address.Builder builder() {
+        return new Address.Builder();
     }
 
     public String getStreetAddress() {
@@ -85,6 +89,53 @@ public class Address {
             return matcher.group("houseNumber");
         }
         return "";
+    }
+
+    public static class Builder {
+
+        protected Address instance;
+
+        public Builder() {
+            this.instance = new Address();
+        }
+
+        public Address build() {
+            Address result;
+            result = this.instance;
+            this.instance = null;
+            return result;
+        }
+
+        public Builder withStreetAddress(String streetAddress) {
+            this.instance.streetAddress = streetAddress;
+            return this;
+        }
+
+        public Builder withOtherDesignation(String otherDesignation) {
+            this.instance.otherDesignation = otherDesignation;
+            return this;
+        }
+
+        public Builder withCity(String city) {
+            this.instance.city = city;
+            return this;
+        }
+
+        public Builder withState(String state) {
+            this.instance.state = state;
+            return this;
+        }
+
+        public Builder withPostalCode(String postalCode) {
+            this.instance.postalCode = postalCode;
+            return this;
+        }
+
+        public Builder withCountry(String country) {
+            this.instance.country = country;
+            return this;
+        }
+
     }
 }
 

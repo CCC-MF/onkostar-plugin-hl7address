@@ -36,14 +36,14 @@ public class DefaultHl7AddressSplitter implements Hl7AddressSplitter {
         var matcher = pattern.matcher(hl7address);
 
         if (matcher.find()) {
-            return new Address(
-                    matcher.group("streetAddress").trim(),
-                    matcher.group("otherDesignation").trim(),
-                    matcher.group("city").trim(),
-                    matcher.group("state").trim(),
-                    matcher.group("postalCode").trim(),
-                    matcher.group("country").trim()
-            );
+            return Address.builder()
+                    .withStreetAddress(matcher.group("streetAddress").trim())
+                    .withOtherDesignation(matcher.group("otherDesignation").trim())
+                    .withCity(matcher.group("city").trim())
+                    .withState(matcher.group("state").trim())
+                    .withPostalCode(matcher.group("postalCode").trim())
+                    .withCountry(matcher.group("country").trim())
+                    .build();
         }
 
         throw new RuntimeException("Cannot parse HL7 Address");
