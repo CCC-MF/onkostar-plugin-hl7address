@@ -149,14 +149,12 @@ public class Hl7AddressPlugin implements IHl7Analyzer {
         if (patientId.isPresent()) {
             var patient = this.onkostarApi.getPatient(patientId.get().getID().getValue());
             if (null != patient) {
-                logger.info("Patient: {}", patient);
                 return Optional.of(patient);
             }
             return Optional.empty();
         }
 
         logger.info("Keine passende HL7 Nachricht mit Struktur 'PID'");
-
         return Optional.empty();
     }
 
@@ -208,7 +206,6 @@ public class Hl7AddressPlugin implements IHl7Analyzer {
         }
 
         logger.info("Keine passende HL7 Nachricht mit Struktur 'PID'");
-
         return List.of();
     }
 
