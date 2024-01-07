@@ -33,7 +33,6 @@ import de.itc.onkostar.api.analysis.IHl7Analyzer;
 import de.itc.onkostar.api.analysis.OnkostarPluginType;
 import de.itc.onkostar.api.hl7.*;
 import de.itc.onkostar.api.hl7.wrapper.CX;
-import de.itc.onkostar.api.hl7.wrapper.XAD;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -47,7 +46,7 @@ import java.util.stream.Collectors;
 @Component
 public class Hl7AddressPlugin implements IHl7Analyzer {
 
-    private Logger logger = LoggerFactory.getLogger(Hl7AddressPlugin.class);
+    private final Logger logger = LoggerFactory.getLogger(Hl7AddressPlugin.class);
 
     private final IOnkostarApi onkostarApi;
 
@@ -104,9 +103,11 @@ public class Hl7AddressPlugin implements IHl7Analyzer {
                     var hl7Address = hl7AddressSplitter.split(address);
 
                     if (
-                            null != patientAddress && null != patientAddress.getStreet() && null != patientAddress.getHouseNumber() &&
-                                    (patientAddress.getStreet().equals(hl7Address.getStreetName())
-                                            || patientAddress.getHouseNumber().equals(hl7Address.getHouseNumber()))
+                            null == patientAddress
+                                    || null == patientAddress.getStreet()
+                                    || null == patientAddress.getHouseNumber()
+                                    || patientAddress.getStreet().equals(hl7Address.getStreetName())
+                                    || patientAddress.getHouseNumber().equals(hl7Address.getHouseNumber())
                     ) {
                         return;
                     }
@@ -128,7 +129,7 @@ public class Hl7AddressPlugin implements IHl7Analyzer {
         var message = pipeParser.parse(hl7Message.getMessage());
         var pidStructure = message.get("PID");
 
-        Optional<CX> patientId = null;
+        Optional<CX> patientId = Optional.empty();
 
         switch (HL7VersionEnum.getHl7Version(hl7Message.getHl7Version())) {
             case V2_3:
