@@ -107,13 +107,14 @@ public class Hl7AddressPlugin implements IHl7Analyzer {
                     var patientAddress = patient.getAddress();
                     var hl7Address = hl7AddressSplitter.split(address);
 
-                    if (
-                            null == patientAddress
-                                    || null == patientAddress.getStreet()
-                                    || null == patientAddress.getHouseNumber()
-                                    || patientAddress.getStreet().equals(hl7Address.getStreetName())
-                                    || patientAddress.getHouseNumber().equals(hl7Address.getHouseNumber())
-                    ) {
+                    if (null == patientAddress) {
+                        return;
+                    }
+
+                    var patientStreet = patientAddress.getStreet() == null ? "" : patientAddress.getStreet();
+                    var patientHouseNumber = patientAddress.getHouseNumber() == null ? "" : patientAddress.getHouseNumber();
+
+                    if (patientStreet.equals(hl7Address.getStreetName()) && patientHouseNumber.equals(hl7Address.getStreetName())) {
                         return;
                     }
 
