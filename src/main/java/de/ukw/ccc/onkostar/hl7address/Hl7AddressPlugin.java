@@ -69,12 +69,12 @@ public class Hl7AddressPlugin implements IHl7Analyzer {
 
     @Override
     public String getName() {
-        return "Onkostar Plugin HL7 Address";
+        return "Onkostar Plugin HL7 Address - HL7-Eingang";
     }
 
     @Override
     public String getDescription() {
-        return "Dieses Onkostar-Plugin ermöglicht das Aufteilen von HL7 Adressen in die einzelnen Bestandteile";
+        return "Ermöglicht das automatische Aufteilen von Straße und Hausnummer";
     }
 
     @Override
