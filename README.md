@@ -5,6 +5,8 @@ Straße und Hausnummer.
 
 ## Eigenschaften des Plugins
 
+### Nutzung nach Anwendung einer HL7-Nachricht
+
 Das Plugin wird nach der internen Verarbeitung der HL7-Nachricht durch Onkostar ausgeführt.
 
 Das bedeutet, dass bereits immer eine Anschrift, hier zunächst mit Straße und Hausnummer im Formularfeld "Straße" für
@@ -12,6 +14,26 @@ einen Patienten vorhanden ist.
 
 Neue Patienten werden im jeweils konfigurierten Personenstamm ebenfalls vor Ausführung des Plugins angelegt und sind
 daher bereits in der Datenbank vorhanden.
+
+### Nutzung für eine Reorganisation
+
+Das Plugin kann auch für eine Reorganisation verwendet werden.
+
+_Leider ist es nicht möglich, ein Patienten-Analyzer-Plugin zu implementieren, da dafür benötigte Teile nicht über die
+Onkostar-API bereitgestellt werden. Das Plugin verwendet daher die Diagnose-Formulare, um alle Patienten zu reorganisieren._  
+
+Wählen Sie hierzu zunächst eine Plugin-Reorganisation aus.
+
+Stellen Sie sicher, dass ein Haken bei "Erkrankung" gesetzt ist.
+Danach wählen Sie das Plugin "Onkostar Plugin HL7 Address - ReOrg" aus, den Personenstamm und die für Sie relevanten
+Diagnose-Formulare. 
+
+Sie können die Ausführung zudem über Angaben zum Prozedurdatum einschränken.
+
+![Dialog](docs/reorg.png)
+
+Nach dem Durchlauf der Reorganisation sind - sofern möglich - die Straße und Hausnummer der Patienten
+mit einer Diagnose getrennt.
 
 ### Aufteilung in Straße und Hausnummer
 
