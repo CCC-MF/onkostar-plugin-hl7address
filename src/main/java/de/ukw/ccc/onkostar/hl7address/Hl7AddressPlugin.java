@@ -24,7 +24,10 @@
 
 package de.ukw.ccc.onkostar.hl7address;
 
+import ca.uhn.hl7v2.DefaultHapiContext;
 import ca.uhn.hl7v2.HL7Exception;
+import ca.uhn.hl7v2.HapiContext;
+import ca.uhn.hl7v2.parser.CanonicalModelClassFactory;
 import ca.uhn.hl7v2.parser.PipeParser;
 import de.itc.onkostar.api.IOnkostarApi;
 import de.itc.onkostar.api.Patient;
@@ -32,6 +35,7 @@ import de.itc.onkostar.api.analysis.AnalyzerRequirement;
 import de.itc.onkostar.api.analysis.IHl7Analyzer;
 import de.itc.onkostar.api.analysis.OnkostarPluginType;
 import de.itc.onkostar.api.hl7.*;
+import de.itc.onkostar.api.hl7.utils.OnkostarValidationContext;
 import de.itc.onkostar.api.hl7.wrapper.CX;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,6 +45,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 @Component
@@ -126,8 +131,16 @@ public class Hl7AddressPlugin implements IHl7Analyzer {
 
     }
 
+    private PipeParser getPipeParser(String hl7version) {
+        HapiContext context = new DefaultHapiContext(Executors.newCachedThreadPool());
+        CanonicalModelClassFactory mcf = new CanonicalModelClassFactory(hl7version);
+        context.setModelClassFactory(mcf);
+        context.setValidationContext(new OnkostarValidationContext());
+        return context.getPipeParser();
+    }
+
     private Optional<Patient> getRelatedPatient(Hl7Message hl7Message) throws HL7Exception {
-        PipeParser pipeParser = new PipeParser();
+        PipeParser pipeParser = getPipeParser(hl7Message.getHl7Version());
         var message = pipeParser.parse(hl7Message.getMessage());
         var pidStructure = message.get("PID");
 
@@ -162,7 +175,7 @@ public class Hl7AddressPlugin implements IHl7Analyzer {
     }
 
     private List<String> getAddressList(Hl7Message hl7Message) throws HL7Exception {
-        PipeParser pipeParser = new PipeParser();
+        PipeParser pipeParser = getPipeParser(hl7Message.getHl7Version());
         var message = pipeParser.parse(hl7Message.getMessage());
         var pidStructure = message.get("PID");
         switch (HL7VersionEnum.getHl7Version(hl7Message.getHl7Version())) {
@@ -211,6 +224,5 @@ public class Hl7AddressPlugin implements IHl7Analyzer {
         logger.warn("Keine passende HL7 Nachricht mit Struktur 'PID'");
         return List.of();
     }
-
 
 }
