@@ -73,18 +73,26 @@ public class Address {
     }
 
     public String getStreetName() {
+        return getStreetNameFromStreetAddress(this.streetAddress);
+    }
+
+    public String getHouseNumber() {
+        return getHouseNumberFromStreetAddress(this.streetAddress);
+    }
+
+    public static String getStreetNameFromStreetAddress(String streetAddress) {
         var pattern = Pattern.compile("(?<streetName>.+)+\\s+(?<houseNumber>([0-9]+[A-Za-z\\s\\-/]*)*)$");
-        var matcher = pattern.matcher(this.streetAddress);
+        var matcher = pattern.matcher(streetAddress);
 
         if (matcher.find()) {
             return matcher.group("streetName");
         }
-        return this.streetAddress;
+        return streetAddress;
     }
 
-    public String getHouseNumber() {
+    public static String getHouseNumberFromStreetAddress(String streetAddress) {
         var pattern = Pattern.compile("(?<streetName>.+)+\\s+(?<houseNumber>([0-9]+[A-Za-z\\s\\-/]*)*)$");
-        var matcher = pattern.matcher(this.streetAddress);
+        var matcher = pattern.matcher(streetAddress);
         if (matcher.find()) {
             return matcher.group("houseNumber");
         }
@@ -137,5 +145,5 @@ public class Address {
         }
 
     }
-}
 
+}
