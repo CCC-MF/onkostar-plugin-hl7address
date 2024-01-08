@@ -120,6 +120,8 @@ public class Hl7AddressPlugin implements IHl7Analyzer {
             }
         } catch (HL7Exception e) {
             logger.error("Kann HL7 Nachricht nicht verarbeiten", e);
+        } catch (Exception e) {
+            logger.error("Kann die Anschrift des Patienten nicht aus HL7-Nachricht aktualisieren", e);
         }
 
     }
@@ -151,10 +153,11 @@ public class Hl7AddressPlugin implements IHl7Analyzer {
             if (null != patient) {
                 return Optional.of(patient);
             }
+            logger.warn("Kein Patient für '{}' gefunden", patientId.get().getID().getValue());
             return Optional.empty();
         }
 
-        logger.info("Keine passende HL7 Nachricht mit Struktur 'PID'");
+        logger.warn("Keine passende HL7 Nachricht mit Struktur 'PID'");
         return Optional.empty();
     }
 
@@ -205,7 +208,7 @@ public class Hl7AddressPlugin implements IHl7Analyzer {
                         .collect(Collectors.toList());
         }
 
-        logger.info("Keine passende HL7 Nachricht mit Struktur 'PID'");
+        logger.warn("Keine passende HL7 Nachricht mit Struktur 'PID'");
         return List.of();
     }
 
