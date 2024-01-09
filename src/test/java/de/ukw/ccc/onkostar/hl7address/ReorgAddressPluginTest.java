@@ -126,7 +126,9 @@ public class ReorgAddressPluginTest {
     private static Stream<Arguments> ignoreTestSource() {
         return Stream.of(
                 Arguments.of("Teststraße", "42"),
-                Arguments.of("Teststraße ", "42 ")
+                Arguments.of("Teststraße ", "42 "),
+                // @see: https://github.com/CCC-MF/onkostar-plugin-hl7address/issues/1#issuecomment-1882282507
+                Arguments.of("Am Schlag 4", "35 ")
         );
     }
 
