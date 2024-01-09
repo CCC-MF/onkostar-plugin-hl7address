@@ -29,6 +29,7 @@ import de.itc.onkostar.api.Disease;
 import de.itc.onkostar.api.IOnkostarApi;
 import de.itc.onkostar.api.Patient;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -93,6 +94,22 @@ public class ReorgAddressPluginTest {
         verify(onkostarApi, never()).savePatient(any(Patient.class));
     }
 
+    // @see: https://github.com/CCC-MF/onkostar-plugin-hl7address/issues/1
+    @Test
+    void shouldSaveSplittedAddressWithExistingSplittedAddressIssue1() {
+        var patient = dummyPatient("Am Schlag 4", "25");
+
+        when(onkostarApi.getPatient(anyInt())).thenReturn(patient);
+
+        plugin.analyze(null, dummyDisease(patient));
+
+        var captor = ArgumentCaptor.forClass(Patient.class);
+        verify(onkostarApi, times(1)).savePatient(captor.capture());
+        assertThat(captor.getValue()).isNotNull();
+        assertThat(captor.getValue().getAddress().getStreet()).isEqualTo("Am Schlag");
+        assertThat(captor.getValue().getAddress().getHouseNumber()).isEqualTo("4");
+    }
+
     private Patient dummyPatient(String street, String houseNumber) {
         var address = new Address();
         address.setStreet(street);
@@ -119,16 +136,16 @@ public class ReorgAddressPluginTest {
         return Stream.of(
                 Arguments.of("Teststraße 42", "", "Teststraße", "42"),
                 Arguments.of("Teststraße 42", "42", "Teststraße", "42"),
-                Arguments.of("Teststraße 42 ", "  ", "Teststraße", "42")
+                Arguments.of("Teststraße 42 ", "  ", "Teststraße", "42"),
+                // @see: https://github.com/CCC-MF/onkostar-plugin-hl7address/issues/1#issuecomment-1882282507
+                Arguments.of("Am Schlag 4", "35", "Am Schlag", "4")
         );
     }
 
     private static Stream<Arguments> ignoreTestSource() {
         return Stream.of(
                 Arguments.of("Teststraße", "42"),
-                Arguments.of("Teststraße ", "42 "),
-                // @see: https://github.com/CCC-MF/onkostar-plugin-hl7address/issues/1#issuecomment-1882282507
-                Arguments.of("Am Schlag 4", "35 ")
+                Arguments.of("Teststraße ", "42 ")
         );
     }
 

@@ -104,21 +104,14 @@ public class ReorgAddressPlugin implements IProcedureAnalyzer {
         }
 
         var street = null == address.getStreet() ? "" : address.getStreet().trim();
-        var houseNumber = null == address.getHouseNumber() ? "" : address.getHouseNumber().trim();
 
-        // Case: StreetName contains HouseNumber
-        if (!houseNumber.isBlank() && (street.startsWith(houseNumber) || street.endsWith(houseNumber))) {
-            address.setStreet(Address.getStreetNameFromStreetAddress(street));
-            address.setHouseNumber(Address.getHouseNumberFromStreetAddress(street));
-        }
-        // Case empty HouseNumber - try to split
-        else if (houseNumber.isBlank()) {
-            address.setStreet(Address.getStreetNameFromStreetAddress(street));
-            address.setHouseNumber(Address.getHouseNumberFromStreetAddress(street));
-        } else {
-            // Exit in other cases
+        // Case: No HouseNumber within StreetAddress
+        if (Address.getHouseNumberFromStreetAddress(street).isBlank()) {
             return;
         }
+
+        address.setStreet(Address.getStreetNameFromStreetAddress(street));
+        address.setHouseNumber(Address.getHouseNumberFromStreetAddress(street));
 
         patient.setAddress(address);
         onkostarApi.savePatient(patient);

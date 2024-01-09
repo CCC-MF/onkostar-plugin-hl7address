@@ -74,7 +74,7 @@ public class Hl7AddressPluginTest {
     @Test
     void shouldSaveSplittedAddressWithExistingSplittedAddressIssue1() {
         // Mock existing patient
-        doAnswer(invocationOnMock -> dummyPatient(invocationOnMock.getArgument(0), "Am Breitenstein", "25")).when(onkostarApi).getPatient(anyString());
+        doAnswer(invocationOnMock -> dummyPatient(invocationOnMock.getArgument(0), "Am Schlag 4", "25")).when(onkostarApi).getPatient(anyString());
 
         // HL7 Message with new address: Am Schlag 4
         plugin.analyze(dummyHl7Message(2));
