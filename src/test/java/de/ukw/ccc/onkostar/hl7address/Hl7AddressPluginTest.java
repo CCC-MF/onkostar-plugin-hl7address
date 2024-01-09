@@ -59,9 +59,9 @@ public class Hl7AddressPluginTest {
 
     @Test
     void shouldSaveSplittedAddress() {
-        doAnswer(invocationOnMock -> dummyPatient(invocationOnMock.getArgument(0))).when(onkostarApi).getPatient(anyString());
+        doAnswer(invocationOnMock -> dummyPatient(invocationOnMock.getArgument(0), "Teststraße", "1")).when(onkostarApi).getPatient(anyString());
 
-        plugin.analyze(dummyHl7Message());
+        plugin.analyze(dummyHl7Message(1));
 
         var captor = ArgumentCaptor.forClass(Patient.class);
         verify(onkostarApi, times(1)).savePatient(captor.capture());
@@ -70,9 +70,26 @@ public class Hl7AddressPluginTest {
         assertThat(captor.getValue().getAddress().getHouseNumber()).isEqualTo("42");
     }
 
-    private Hl7Message dummyHl7Message() {
+    // @see: https://github.com/CCC-MF/onkostar-plugin-hl7address/issues/1
+    @Test
+    void shouldSaveSplittedAddressWithExistingSplittedAddressIssue1() {
+        // Mock existing patient
+        doAnswer(invocationOnMock -> dummyPatient(invocationOnMock.getArgument(0), "Am Breitenstein", "25")).when(onkostarApi).getPatient(anyString());
+
+        // HL7 Message with new address: Am Schlag 4
+        plugin.analyze(dummyHl7Message(2));
+
+        // Verify new address is saved
+        var captor = ArgumentCaptor.forClass(Patient.class);
+        verify(onkostarApi, times(1)).savePatient(captor.capture());
+        assertThat(captor.getValue()).isNotNull();
+        assertThat(captor.getValue().getAddress().getStreet()).isEqualTo("Am Schlag");
+        assertThat(captor.getValue().getAddress().getHouseNumber()).isEqualTo("4");
+    }
+
+    private Hl7Message dummyHl7Message(int id) {
         try {
-            var message = new String(new ClassPathResource("testhl7.hl7").getInputStream().readAllBytes());
+            var message = new String(new ClassPathResource(String.format("testhl7-%d.hl7", id)).getInputStream().readAllBytes());
             var result = new Hl7Message(onkostarApi);
             result.setHl7Version("2.3");
             result.setMessage(message);
@@ -82,10 +99,10 @@ public class Hl7AddressPluginTest {
         }
     }
 
-    private Patient dummyPatient(String patientId) {
+    private Patient dummyPatient(String patientId, String street, String houseNumber) {
         var address = new Address();
-        address.setStreet("Teststraße");
-        address.setHouseNumber("1");
+        address.setStreet(street);
+        address.setHouseNumber(houseNumber);
         address.setZipCode("012345");
         address.setCity("Musterhausen");
 
