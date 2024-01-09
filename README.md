@@ -35,7 +35,19 @@ Sie können die Ausführung zudem über Angaben zum Prozedurdatum einschränken.
 Nach dem Durchlauf der Reorganisation sind - sofern möglich - die Straße und Hausnummer der Patienten
 mit einer Diagnose getrennt.
 
-### Aufteilung in Straße und Hausnummer
+#### Hinweis zum Übernehmen von Hausnummern aus einer HL7-Nachricht
+
+Ist für einen Patienten eine Straße und Hausnummer angegeben, wird durch den Import einer HL7-Datei die darin enthaltene
+Angabe für `<streetAddress>` mit Straße und Hausnummer in das Formularfeld für die Straße eingefügt.
+
+**Die zuvor bereits vorhandene Hausnummer wird im Formularfeld für die Hausnummer (Version 2.12.1) so belassen.**
+
+Aus diesem Grund überschreibt das Plugin bei einer Reorganisation immer dann die - nun veraltete - Hausnummer, sofern
+in der neuen Angabe im Formularfeld für die Straße eine Hausnummer erkannt wurde.
+Nach der Reorganisation ist somit im Formularfeld für die Straße nur die neue Straße, im Formularfeld für die
+Hausnummer nur die neue Hausnummer eingetragen.
+
+### HL7-Anschrift und Aufteilung in Straße und Hausnummer
 
 In HL7-Nachrichten liegen die Anschriften immer in der folgenden Form vor:
 
