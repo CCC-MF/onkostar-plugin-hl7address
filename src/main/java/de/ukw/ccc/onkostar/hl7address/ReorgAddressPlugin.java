@@ -103,8 +103,8 @@ public class ReorgAddressPlugin implements IProcedureAnalyzer {
             return;
         }
 
-        var street = address.getStreet().trim();
-        var houseNumber = address.getHouseNumber().trim();
+        var street = null == address.getStreet() ? "" : address.getStreet().trim();
+        var houseNumber = null == address.getHouseNumber() ? "" : address.getHouseNumber().trim();
 
         // Case: StreetName contains HouseNumber
         if (!houseNumber.isBlank() && (street.startsWith(houseNumber) || street.endsWith(houseNumber))) {
