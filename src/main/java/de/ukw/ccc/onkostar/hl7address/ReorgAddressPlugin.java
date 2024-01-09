@@ -98,7 +98,7 @@ public class ReorgAddressPlugin implements IProcedureAnalyzer {
         var patient = disease.getPatient();
         var address = patient.getAddress();
 
-        if (null == address || null == address.getStreet() || null == address.getHouseNumber()) {
+        if (null == address || null == address.getStreet()) {
             logger.warn("Keine vollständige Adresse für Patient '{}'", patient.getPatientId());
             return;
         }
