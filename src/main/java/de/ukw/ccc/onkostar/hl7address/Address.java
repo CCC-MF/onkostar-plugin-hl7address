@@ -81,7 +81,7 @@ public class Address {
     }
 
     public static String getStreetNameFromStreetAddress(String streetAddress) {
-        var pattern = Pattern.compile("(?<streetName>.+)+\\s+(?<houseNumber>([0-9]+[A-Za-z\\s\\-/]*)*)$");
+        var pattern = Pattern.compile("(?<streetName>[^,]+)+[,\\s]+(?<houseNumber>([0-9]+[A-Za-z\\s\\-/]*)*)$");
         var matcher = pattern.matcher(streetAddress);
 
         if (matcher.find()) {
@@ -91,7 +91,7 @@ public class Address {
     }
 
     public static String getHouseNumberFromStreetAddress(String streetAddress) {
-        var pattern = Pattern.compile("(?<streetName>.+)+\\s+(?<houseNumber>([0-9]+[A-Za-z\\s\\-/]*)*)$");
+        var pattern = Pattern.compile("(?<streetName>[^,]+)+[,\\s]+(?<houseNumber>([0-9]+[A-Za-z\\s\\-/]*)*)$");
         var matcher = pattern.matcher(streetAddress);
         if (matcher.find()) {
             return matcher.group("houseNumber");
