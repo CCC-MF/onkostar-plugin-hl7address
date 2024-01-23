@@ -61,10 +61,10 @@ In HL7 ist eine Aufteilung von Straße und Hausnummer nicht vorgesehen, beide An
 Die weitere Aufteilung des Bereichs `<streetAddress>` erfolgt mithilfe eines regulären Ausdrucks:
 
 ```
-(?<streetName>.+)+\s+(?<houseNumber>([0-9]+[A-Za-z\s\-/]*)*)$
+(?<streetName>[^,]+)+[,\s]+(?<houseNumber>([0-9]+[A-Za-z\s\-/]*)*)$
 ```
 
-* `streetName` → Alle Zeichen möglich, gefolgt von einem (oder mehreren) abschließenden Leerzeichen
+* `streetName` → Alle Zeichen möglich, gefolgt von einem (oder mehreren) abschließenden Leerzeichen oder Komma
 * `houseNumber` → Der Rest der Zeichenkette bis zum Ende (`$`) muss dabei aus einer (optionalen, falls Hausnummer bereits da fehlt) Folge von:
    * mindestens einer Ziffer
    * gefolgt von jeweils optionalen Buchstaben (ohne Umlaute!), Leerzeichen, Bindestrichen oder Schrägstrichen bestehen
