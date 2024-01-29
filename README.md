@@ -5,6 +5,8 @@ Straße und Hausnummer.
 
 ## Eigenschaften des Plugins
 
+Das Plugin setzt mindestens Onkostar in Version 2.12.1 voraus! 
+
 ### Nutzung nach Anwendung einer HL7-Nachricht
 
 Das Plugin wird nach der internen Verarbeitung der HL7-Nachricht durch Onkostar ausgeführt.
