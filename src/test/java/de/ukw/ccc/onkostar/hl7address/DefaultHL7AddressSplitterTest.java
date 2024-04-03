@@ -57,4 +57,19 @@ class DefaultHL7AddressSplitterTest {
         assertEquals(streetName, address.getStreetName());
         assertEquals(houseNumber, address.getHouseNumber());
     }
+
+    @Test
+    public void testShouldSupportSapMciFormat() {
+        var hl7Address = "Muster Weg 1&Muster Weg&1^^Musterhausen^^12345^DE^C";
+        var address = addressSplitter.split(hl7Address);
+
+        assertEquals("Muster Weg 1", address.getStreetAddress());
+        assertEquals("", address.getOtherDesignation());
+        assertEquals("Musterhausen", address.getCity());
+        assertEquals("", address.getState());
+        assertEquals("12345", address.getPostalCode());
+        assertEquals("DE", address.getCountry());
+        assertEquals("Muster Weg", address.getStreetName());
+        assertEquals("1", address.getHouseNumber());
+    }
 }

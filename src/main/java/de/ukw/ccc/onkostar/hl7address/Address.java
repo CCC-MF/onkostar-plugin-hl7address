@@ -49,7 +49,7 @@ public class Address {
     }
 
     public String getStreetAddress() {
-        return streetAddress;
+        return getStreetAddressFromSapMciFormat(streetAddress);
     }
 
     public String getOtherDesignation() {
@@ -82,8 +82,7 @@ public class Address {
 
     public static String getStreetNameFromStreetAddress(String streetAddress) {
         var pattern = Pattern.compile("(?<streetName>[^,]+)+[,\\s]+(?<houseNumber>([0-9]+[A-Za-z\\s\\-/]*)*)$");
-        var matcher = pattern.matcher(streetAddress);
-
+        var matcher = pattern.matcher(getStreetAddressFromSapMciFormat(streetAddress));
         if (matcher.find()) {
             return matcher.group("streetName");
         }
@@ -92,11 +91,22 @@ public class Address {
 
     public static String getHouseNumberFromStreetAddress(String streetAddress) {
         var pattern = Pattern.compile("(?<streetName>[^,]+)+[,\\s]+(?<houseNumber>([0-9]+[A-Za-z\\s\\-/]*)*)$");
-        var matcher = pattern.matcher(streetAddress);
+        var matcher = pattern.matcher(getStreetAddressFromSapMciFormat(streetAddress));
         if (matcher.find()) {
             return matcher.group("houseNumber");
         }
         return "";
+    }
+
+    private static String getStreetAddressFromSapMciFormat(String input) {
+        if (input.contains("&")) {
+            var parts = input.split("&");
+            if (parts.length == 3 && parts[0].equals(String.format("%s %s", parts[1], parts[2]))) {
+                return parts[0];
+            }
+        }
+
+        return input;
     }
 
     public static class Builder {
